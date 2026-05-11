@@ -1,0 +1,21 @@
+# Aura AI: Global HR Policy (v1.0)
+
+## 1. Leave Policy
+- Casual Leave: 12 days per year.
+- Sick Leave: 10 days per year.
+- Maternity Leave: 26 weeks.
+- Paternity Leave: 2 weeks.
+
+## 2. Working Hours
+- Standard hours: 9:00 AM to 6:00 PM.
+- Flexible start time allowed between 8:00 AM and 10:00 AM.
+- Remote work: Up to 2 days per week with manager approval.
+
+## 3. Reimbursements
+- Internet allowance: $50 per month.
+- Learning & Development: $1000 per year for certifications.
+- Travel: All official travel must be booked via the Aura AI portal.
+
+## 4. Performance
+- Reviews are conducted bi-annually in June and December.
+- Promotions are based on "Neural Score" (Productivity + Feedback).

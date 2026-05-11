@@ -1,6 +1,7 @@
 import { IntentDetectionService } from './intentDetectionService.js';
 import { WorkflowEngine } from './workflowEngine.js';
 import { RealtimeNotificationService } from './realtimeNotificationService.js';
+import { RAGService } from '../rag/ragService.js';
 
 export class WorkflowRouter {
     static async route(command: string, context: Record<string, any> = {}) {
@@ -23,11 +24,14 @@ export class WorkflowRouter {
                 intent
             };
         } else {
+            // Attempt RAG (Retrieval-Augmented Generation) for general questions
+            const ragResponse = await RAGService.answerWithPolicy(command);
+            
             result = {
                 type: 'general',
-                action: 'automation_menu',
-                response: 'I can automate leave, onboarding, and payroll workflows with approvals, audit logs, realtime state, and Make.com orchestration.',
-                suggestedSteps: ['Apply leave tomorrow', 'Run payroll', 'Start onboarding workflow'],
+                action: 'rag_response',
+                response: ragResponse,
+                suggestedSteps: ['Apply leave', 'View my profile', 'Run payroll'],
                 intent
             };
         }
