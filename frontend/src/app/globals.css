@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-aura-primary: #6366f1;
+  --color-aura-secondary: #a855f7;
+  --color-aura-accent: #ec4899;
+  --color-aura-dark: #0f172a;
+  --color-aura-card: rgba(30, 41, 59, 0.7);
+}
+
+:root {
+  --background: #020617;
+  --foreground: #f8fafc;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Custom Components using standard CSS + Tailwind variables */
+.glass {
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  border-radius: 1rem;
+}
+
+.glass-card {
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.aura-button {
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+}
+
+.aura-button:hover {
+  background: linear-gradient(to right, #6366f1, #a855f7);
+}
+
+.aura-button:active {
+  transform: scale(0.95);
+}
+
+.aura-input {
+  background-color: rgba(15, 23, 42, 0.6);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  color: #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.aura-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.4);
+}
