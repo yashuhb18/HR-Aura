@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import BlockchainLog from '../models/BlockchainLog.js';
+import { supabase } from '../config/supabase.js';
 
 export class BlockchainService {
     static async generateHash(data: any): Promise<string> {
@@ -30,6 +31,21 @@ export class BlockchainService {
         });
 
         await log.save();
+
+        // Push to Supabase for real-time/cloud storage
+        try {
+            await supabase.from('blockchain_logs').insert([{
+                action,
+                entity_type: entityType,
+                entity_id: entityId,
+                hash: currentHash,
+                previous_hash: previousHash,
+                timestamp: new Date()
+            }]);
+        } catch (error) {
+            console.warn('Failed to push to Supabase:', (error as Error).message);
+        }
+
         return currentHash;
     }
 

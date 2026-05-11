@@ -7,10 +7,7 @@ import {
   Bot, 
   User as UserIcon, 
   Sparkles, 
-  ChevronRight,
-  ShieldCheck,
-  Calendar,
-  Rocket
+  ShieldCheck
 } from 'lucide-react';
 
 interface Message {
@@ -18,13 +15,18 @@ interface Message {
   content: string;
   type?: string;
   suggestedSteps?: string[];
+  workflow?: {
+    status: string;
+    steps?: Array<{ name: string; status: string }>;
+  };
+  verificationHash?: string;
 }
 
 const suggestions = [
   "Apply leave for tomorrow",
-  "Show employees with low attendance",
+  "Run payroll for this month",
   "Create onboarding workflow",
-  "Generate productivity summary"
+  "Generate payroll approval summary"
 ];
 
 export default function AICopilot() {
@@ -49,26 +51,34 @@ export default function AICopilot() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate API call to backend
-    setTimeout(() => {
-      let aiResponse: Message = {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/ai/command`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: text })
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Automation request failed');
+
+      const aiResponse: Message = {
         role: 'assistant',
-        content: "I've analyzed your request. I can help with that. Should I initiate the standard HR workflow?",
-        suggestedSteps: ['Confirm Workflow', 'View Details', 'Cancel']
+        content: result.response,
+        type: result.type,
+        suggestedSteps: result.suggestedSteps,
+        workflow: result.workflow,
+        verificationHash: result.data?.verificationHash
       };
-
-      if (text.toLowerCase().includes('leave')) {
-        aiResponse = {
-          role: 'assistant',
-          content: "I've checked the leave balance and department calendar. Applying leave for tomorrow seems feasible. No critical blockers found.",
-          type: 'leave',
-          suggestedSteps: ['Finalize Request', 'Check Balance', 'Cancel']
-        };
-      }
-
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Automation engine unavailable: ${(error as Error).message}`,
+        suggestedSteps: ['Retry automation', 'Check backend status']
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -112,23 +122,34 @@ export default function AICopilot() {
                       {msg.content}
                     </div>
 
-                    {msg.type === 'leave' && (
+                    {msg.workflow && (
                       <div className="p-4 bg-slate-900/50 border border-indigo-500/30 rounded-2xl space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">LEAVE WORKFLOW</span>
+                          <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">{msg.type} workflow</span>
                           <div className="flex items-center gap-1 text-[10px] text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full border border-green-400/20">
                             <ShieldCheck size={10} />
-                            BLOCKCHAIN VERIFIED
+                            {msg.verificationHash ? 'BLOCKCHAIN VERIFIED' : msg.workflow.status.toUpperCase()}
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <Calendar className="text-slate-400" size={16} />
-                          <span className="text-xs text-slate-300">May 12, 2026 (One Day)</span>
+                        <div className="space-y-2">
+                          {(msg.workflow.steps || []).slice(0, 6).map((step, index) => (
+                            <div key={step.name} className="flex items-center gap-3 text-xs text-slate-300">
+                              <span className={`h-2 w-2 rounded-full ${step.status === 'completed' ? 'bg-green-400' : 'bg-slate-600'}`} />
+                              <span>{index + 1}. {step.name}</span>
+                            </div>
+                          ))}
                         </div>
                         <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                          <div className="w-1/3 h-full bg-indigo-500" />
+                          <div
+                            className="h-full bg-indigo-500"
+                            style={{
+                              width: `${Math.max(10, Math.round(((msg.workflow.steps || []).filter(step => step.status === 'completed').length / Math.max(1, (msg.workflow.steps || []).length)) * 100))}%`
+                            }}
+                          />
                         </div>
-                        <p className="text-[10px] text-slate-500">Step 1 of 3: AI Eligibility Check Complete</p>
+                        {msg.verificationHash && (
+                          <p className="text-[10px] text-slate-500 truncate">Verification hash: {msg.verificationHash}</p>
+                        )}
                       </div>
                     )}
 

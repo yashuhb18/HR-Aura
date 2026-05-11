@@ -13,9 +13,9 @@ import {
 } from 'lucide-react';
 
 const leaveRequests = [
-  { id: 1, name: 'Alex Rivera', type: 'Annual Leave', dates: 'May 12 - May 14', status: 'Pending', aiAdvice: 'Low impact on Design sprint. Recommended: Approve.' },
-  { id: 2, name: 'Sarah Chen', type: 'Sick Leave', dates: 'May 10 - May 11', status: 'Approved', aiAdvice: 'Medical certificate uploaded and verified.' },
-  { id: 3, name: 'Elena Petrova', type: 'Casual Leave', dates: 'May 20', status: 'Pending', aiAdvice: 'Overlaps with Marketing launch. Review required.' },
+  { id: 1, name: 'Alex Rivera', hash: '7ec340', type: 'Annual Leave', dates: 'May 12 - May 14', status: 'Pending', aiAdvice: 'Low impact on Design sprint. Recommended: Approve.' },
+  { id: 2, name: 'Sarah Chen', hash: '803664', type: 'Sick Leave', dates: 'May 10 - May 11', status: 'Approved', aiAdvice: 'Medical certificate uploaded and verified.' },
+  { id: 3, name: 'Marcus Wright', hash: '89cdee', type: 'Casual Leave', dates: 'May 20', status: 'Pending', aiAdvice: 'Operations coverage available. Review required.' },
 ];
 
 export default function LeavesPage() {
@@ -83,7 +83,7 @@ export default function LeavesPage() {
                 >
                   <td className="px-6 py-4">
                     <div className="font-bold text-slate-200">{req.name}</div>
-                    <div className="text-[10px] text-slate-500">Hash: 0x{Math.random().toString(16).slice(2, 8)}</div>
+                    <div className="text-[10px] text-slate-500">Hash: 0x{req.hash}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-400">{req.type}</td>
                   <td className="px-6 py-4 text-sm text-slate-300 font-medium">{req.dates}</td>

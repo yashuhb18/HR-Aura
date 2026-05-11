@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/navigation/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ 
+  subsets: ["latin"],
+  variable: '--font-outfit',
+});
+
+const jakarta = Plus_Jakarta_Sans({ 
+  subsets: ["latin"],
+  variable: '--font-jakarta',
+});
 
 export const metadata: Metadata = {
-  title: "HR Aura | AI Workforce Operating System",
-  description: "Next-generation AI-powered HR platform",
+  title: "HR Aura | The AI Workforce Engine",
+  description: "Next-generation AI-powered HR operating system for enterprise automation.",
 };
 
 export default function RootLayout({
@@ -16,18 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1 ml-64 p-8 min-h-screen relative">
-            {/* Background decorative elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 blur-[120px] -z-10" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] -z-10" />
-            
-            {children}
-          </main>
-        </div>
+    <html lang="en" className={`${outfit.variable} ${jakarta.variable} bg-black`}>
+      <body className="antialiased font-jakarta">
+        {children}
       </body>
     </html>
   );

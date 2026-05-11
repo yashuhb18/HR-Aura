@@ -11,6 +11,9 @@ export interface IEmployee extends Document {
     burnoutRisk: number; // 0 to 100
     blockchainStatus: string; // Hash of verification
     profileImage?: string;
+    monthlySalary: number;
+    bankAccount?: string;
+    taxId?: string;
 }
 
 const EmployeeSchema: Schema = new Schema({
@@ -23,7 +26,10 @@ const EmployeeSchema: Schema = new Schema({
     performanceScore: { type: Number, default: 0 },
     burnoutRisk: { type: Number, default: 0 },
     blockchainStatus: { type: String },
-    profileImage: { type: String }
+    profileImage: { type: String },
+    monthlySalary: { type: Number, default: 0 },
+    bankAccount: { type: String },
+    taxId: { type: String }
 });
 
 export default mongoose.model<IEmployee>('Employee', EmployeeSchema);

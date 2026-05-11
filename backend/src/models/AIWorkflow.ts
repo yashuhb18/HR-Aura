@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IAIWorkflow extends Document {
-    type: 'leave' | 'onboarding' | 'insight';
+    type: 'leave' | 'onboarding' | 'payroll';
     status: 'initiated' | 'processing' | 'completed' | 'failed';
     steps: Array<{
         name: string;
@@ -13,7 +13,7 @@ export interface IAIWorkflow extends Document {
 }
 
 const AIWorkflowSchema: Schema = new Schema({
-    type: { type: String, enum: ['leave', 'onboarding', 'insight'], required: true },
+    type: { type: String, enum: ['leave', 'onboarding', 'payroll'], required: true },
     status: { type: String, enum: ['initiated', 'processing', 'completed', 'failed'], default: 'initiated' },
     steps: [{
         name: { type: String, required: true },

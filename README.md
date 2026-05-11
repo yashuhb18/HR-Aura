@@ -1,12 +1,26 @@
 # HR Aura: AI Workforce Operating System
 
-HR Aura is a comprehensive full-stack HR SaaS platform built for hackathons, focusing on a futuristic enterprise experience.
+HR Aura is an enterprise HR SaaS platform centered on AI workflow orchestration, Make.com automation, Supabase realtime updates, and blockchain-style verification logs.
 
 ## Quick Start
 
 ### 1. Prerequisites
 - Node.js (v18+)
-- MongoDB (Running locally or on Atlas)
+- MongoDB running locally, on Atlas, or in Docker
+- Supabase project credentials
+- Make.com custom webhook URL
+- OpenAI API key
+
+Required backend environment:
+
+```env
+MONGO_URI=mongodb://localhost:27017/hraura
+SUPABASE_URL=...
+SUPABASE_ANON_KEY=...
+MAKE_WEBHOOK_URL=...
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-5-codex
+```
 
 ### 2. Setup Backend
 ```bash
@@ -24,16 +38,21 @@ npm run dev
 ```
 
 ## Features
-- **AI Copilot**: Conversational HR assistant.
-- **Leave Automation**: Intelligent leave workflows.
-- **Burnout Analytics**: AI-driven employee wellness monitoring.
-- **Blockchain Verification**: Immutable audit trail for all actions.
+- **AI Copilot**: Conversational automation router for HR operations.
+- **Leave Automation**: Leave balance checks, AI approval summaries, manager approvals, Make.com triggers, verification logs.
+- **Onboarding Automation**: AI checklists, onboarding tasks, welcome summaries, employee setup progress, verification logs.
+- **Payroll Automation**: Salary, attendance, and leave analysis; payroll records; HR approvals; Make.com triggers; verification logs.
+- **Realtime Workflow State**: Supabase mirrors workflow status, events, approvals, payroll records, leave requests, onboarding tasks, and trust logs.
 
-## Design
-- Dark mode futuristic UI
-- Glassmorphism effects
-- Smooth Framer Motion animations
-- Responsive layout
+## Automation APIs
+
+```text
+POST /api/ai/command
+POST /api/ai/automations/payroll/run
+POST /api/ai/automations/onboarding/start
+POST /api/leaves/request
+POST /api/ai/webhooks/make
+```
 
 ---
 

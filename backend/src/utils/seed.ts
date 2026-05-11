@@ -3,6 +3,12 @@ import dotenv from 'dotenv';
 import User from '../models/User.js';
 import Employee from '../models/Employee.js';
 import Attendance from '../models/Attendance.js';
+import LeaveRequest from '../models/LeaveRequest.js';
+import OnboardingTask from '../models/OnboardingTask.js';
+import AIWorkflow from '../models/AIWorkflow.js';
+import Approval from '../models/Approval.js';
+import PayrollRecord from '../models/PayrollRecord.js';
+import BlockchainLog from '../models/BlockchainLog.js';
 
 dotenv.config();
 
@@ -14,6 +20,12 @@ const seedData = async () => {
         await User.deleteMany({});
         await Employee.deleteMany({});
         await Attendance.deleteMany({});
+        await LeaveRequest.deleteMany({});
+        await OnboardingTask.deleteMany({});
+        await AIWorkflow.deleteMany({});
+        await Approval.deleteMany({});
+        await PayrollRecord.deleteMany({});
+        await BlockchainLog.deleteMany({});
 
         console.log('Seeding data...');
 
@@ -28,9 +40,9 @@ const seedData = async () => {
 
         // Create Employees
         const employeeData = [
-            { name: 'Alex Rivera', email: 'alex@hraura.ai', dept: 'Design', role: 'Sr. Product Designer' },
-            { name: 'Sarah Chen', email: 'sarah@hraura.ai', dept: 'Engineering', role: 'Full Stack Engineer' },
-            { name: 'Marcus Wright', email: 'marcus@hraura.ai', dept: 'Operations', role: 'HR Specialist' }
+            { id: 'HRA-1001', name: 'Alex Rivera', email: 'alex@hraura.ai', dept: 'Design', role: 'Sr. Product Designer', salary: 185000, score: 91, risk: 18 },
+            { id: 'HRA-1002', name: 'Sarah Chen', email: 'sarah@hraura.ai', dept: 'Engineering', role: 'Full Stack Engineer', salary: 225000, score: 94, risk: 12 },
+            { id: 'HRA-1003', name: 'Marcus Wright', email: 'marcus@hraura.ai', dept: 'Operations', role: 'HR Specialist', salary: 145000, score: 86, risk: 24 }
         ];
 
         for (const data of employeeData) {
@@ -44,13 +56,16 @@ const seedData = async () => {
 
             const employee = new Employee({
                 userId: user._id,
-                employeeId: `HRA-${Math.floor(Math.random() * 9000) + 1000}`,
+                employeeId: data.id,
                 department: data.dept,
                 designation: data.role,
                 joiningDate: new Date(),
                 status: 'active',
-                performanceScore: Math.floor(Math.random() * 20) + 80,
-                burnoutRisk: Math.floor(Math.random() * 40)
+                performanceScore: data.score,
+                burnoutRisk: data.risk,
+                monthlySalary: data.salary,
+                bankAccount: `HRABANK${data.id.replace('HRA-', '')}`,
+                taxId: `TAX-${data.id}`
             });
             await employee.save();
 
@@ -64,7 +79,7 @@ const seedData = async () => {
                     checkIn: new Date(date.setHours(9, 0, 0)),
                     checkOut: new Date(date.setHours(18, 0, 0)),
                     status: 'present',
-                    productivityScore: Math.floor(Math.random() * 30) + 70
+                    productivityScore: data.score
                 });
                 await attendance.save();
             }

@@ -1,37 +1,20 @@
 import { Request, Response } from 'express';
 import LeaveRequest from '../models/LeaveRequest.js';
-import Employee from '../models/Employee.js';
 import { BlockchainService } from '../services/blockchainService.js';
-import { AIService } from '../services/aiService.js';
+import { WorkflowEngine } from '../services/workflowEngine.js';
+import { AutomationService } from '../services/automationService.js';
 
 export const requestLeave = async (req: Request, res: Response) => {
     try {
-        const { employeeId, leaveType, startDate, endDate, reason } = req.body;
+        const { employeeId, leaveType, startDate, endDate, reason, userId } = req.body;
 
-        const employee = await Employee.findById(employeeId).populate('userId');
-        if (!employee) return res.status(404).json({ message: 'Employee not found' });
+        const result = await WorkflowEngine.runLeaveAutomation({
+            intent: 'apply_leave',
+            confidence: 1,
+            entities: { employeeId, leaveType, startDate, endDate, reason }
+        }, userId);
 
-        // Generate AI Summary
-        const aiSummary = await AIService.generateLeaveSummary(
-            (employee.userId as any).name,
-            leaveType,
-            new Date(startDate),
-            new Date(endDate),
-            reason
-        );
-
-        const leaveRequest = new LeaveRequest({
-            employeeId,
-            leaveType,
-            startDate,
-            endDate,
-            reason,
-            aiSummary,
-            status: 'pending'
-        });
-
-        await leaveRequest.save();
-        res.status(201).json(leaveRequest);
+        res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ message: (error as Error).message });
     }
@@ -45,10 +28,19 @@ export const approveLeave = async (req: Request, res: Response) => {
         leaveRequest.status = 'approved';
 
         // Log to blockchain
-        const hash = await BlockchainService.verifyAction('APPROVE_LEAVE', 'LeaveRequest', leaveRequest._id as string, { status: 'approved' });
+        const hash = await BlockchainService.verifyAction('APPROVE_LEAVE', 'LeaveRequest', leaveRequest._id.toString(), { status: 'approved' });
         leaveRequest.blockchainHash = hash;
 
         await leaveRequest.save();
+
+        // Trigger Automation
+        await AutomationService.triggerEvent('LEAVE_APPROVED', {
+            id: leaveRequest._id,
+            employee: leaveRequest.employeeId,
+            type: leaveRequest.leaveType,
+            dates: `${leaveRequest.startDate} to ${leaveRequest.endDate}`
+        });
+
         res.status(200).json(leaveRequest);
     } catch (error) {
         res.status(400).json({ message: (error as Error).message });

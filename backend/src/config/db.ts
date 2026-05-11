@@ -5,11 +5,15 @@ dotenv.config();
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hraura');
+        if (!process.env.MONGO_URI) {
+            throw new Error('MONGO_URI is required for HR Aura automation workflows');
+        }
+
+        const conn = await mongoose.connect(process.env.MONGO_URI);
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-        console.error(`MongoDB Warning: ${(error as Error).message}. Proceeding without DB.`);
-        // Don't exit for hackathon demo
+        console.error(`MongoDB connection failed: ${(error as Error).message}`);
+        process.exit(1);
     }
 };
 

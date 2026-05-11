@@ -19,6 +19,8 @@ const insightCards = [
   { title: 'Late Arrivals', value: '2.4%', change: '-1%', icon: TrendingDown, color: 'text-purple-400' },
 ];
 
+const activityHashes = ['8f41a9c2', '0c77d1be', 'b9204ab6', '51d0e8aa'];
+
 export default function AttendancePage() {
   return (
     <div className="space-y-8">
@@ -109,7 +111,7 @@ export default function AttendancePage() {
                   <p className="text-sm text-slate-200 font-medium">
                     {['Alex Rivera', 'Sarah Chen', 'Marcus Wright', 'Elena Petrova'][i]} checked in
                   </p>
-                  <p className="text-[10px] text-slate-500">Today at 09:1{i} AM • Verified Hash: 0x{Math.random().toString(16).slice(2, 10)}...</p>
+                  <p className="text-[10px] text-slate-500">Today at 09:1{i} AM - Verified Hash: 0x{activityHashes[i]}...</p>
                 </div>
               </div>
             ))}
