@@ -188,11 +188,10 @@ export class WorkflowEngine {
         await this.completeStep(workflow, 'Make.com automation triggered', makeResult);
 
         const response = [
-            'OK Leave request created',
-            'OK Manager approval initiated',
-            'OK Blockchain verification completed',
-            'OK Make.com automation triggered'
-        ].join('\n');
+            `I've successfully processed your ${leaveType} request from ${startDate.toDateString()} to ${endDate.toDateString()}.`,
+            'The request has been logged to the blockchain trust ledger, and I\'ve initiated the manager approval workflow.',
+            'Your team has also been notified via the Make.com automation engine.'
+        ].join(' ');
 
         const payload = { workflowId: workflow._id.toString(), leaveRequestId: leaveRequest._id.toString(), approvalId: approval._id.toString(), verificationHash, leaveBalance, aiSummary };
         await this.finishWorkflow(workflow, response, payload);
@@ -355,13 +354,10 @@ export class WorkflowEngine {
 
         const totalNetPayable = money(payrollRecords.reduce((sum, item) => sum + item.netSalary, 0));
         const response = [
-            'OK Payroll run generated',
-            `OK ${payrollRecords.length} employee payroll record(s) calculated`,
-            `OK Net payable total: ${totalNetPayable}`,
-            'OK HR approval initiated',
-            'OK Blockchain verification completed',
-            'OK Make.com automation triggered'
-        ].join('\n');
+            `I've completed the payroll run for ${periodLabel}.`,
+            `I've calculated payroll for ${payrollRecords.length} employees with a total net payable of ${totalNetPayable}.`,
+            'The entire run is now pending HR approval and has been secured on the blockchain.'
+        ].join(' ');
         const payload = { workflowId: workflow._id.toString(), approvalId: approval._id.toString(), verificationHash, periodLabel, totalNetPayable, payrollRecords };
         await this.finishWorkflow(workflow, response, payload);
 
@@ -441,12 +437,10 @@ export class WorkflowEngine {
         await this.completeStep(workflow, 'Make.com automation triggered', makeResult);
 
         const response = [
-            'OK Onboarding workflow generated',
-            `OK ${tasks.length} onboarding tasks assigned`,
-            'OK Welcome summary created',
-            'OK Blockchain verification completed',
-            'OK Make.com automation triggered'
-        ].join('\n');
+            `I've successfully initiated the onboarding workflow for ${employeeName}.`,
+            `I've generated and assigned ${tasks.length} specialized tasks for their role in ${employee.department}.`,
+            'The welcome sequence is now active, and the record is secured on the blockchain ledger.'
+        ].join(' ');
 
         const payload = { workflowId: workflow._id.toString(), employeeId: employee._id.toString(), taskIds: tasks.map((task) => task._id.toString()), verificationHash, welcomeSummary };
         await this.finishWorkflow(workflow, response, payload);
